@@ -19,25 +19,200 @@
         th {
             font-weight:bold;
         }
+        
     </style>
 
 </head>
 
 <body style="background-color:#FFE2E2;">
+   
+    <video id="video" width="640" height="480"  background-color: #666 autoplay="true"></video>
+    <hr>
+    <button id="snap">Snap Photo</button>
+    <button id="upload">upload</button>
+    <hr>
+    <canvas id="canvas" width="640" height="480"></canvas>
+<!-- 
+    <form id="loginForm" action="" method="post">
+        <input type="button" onclick="upload()" value="Submit">
+    </form> -->
+
+    <div id="results"></div>
+
+    <div id="content"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <div id="container"> -->
+        <!-- <video id="video" width="640" height="480"  background-color: #666 autoplay="true"></video> -->
+    <!-- </div> -->
+    <!-- <button id="snap">Snap Photo</button> -->
+    <!-- <canvas id="canvas" width="640" height="480"></canvas> -->
+
+
+    <!-- {% if image_to_show %}
+                <div>
+                    <img src="{{ get_image }}">
+                </div>
+    {% endif %} -->
+
+    <script>
+        var video = document.querySelector("#video");
+
+        if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+            video.srcObject = stream;
+            })
+            .catch(function (err0r) {
+            console.log("Something went wrong!");
+            });
+        }
+    </script>
+    <script>
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var video = document.getElementById('video');
+
+        // Trigger photo take
+        document.getElementById("snap").addEventListener("click", function() {
+            context.drawImage(video, 0, 0, 640, 480);
+        });
+
+        $(document).ready(function() {    
+                                
+                                $("#upload").click(function() {
+                                  var canvas = document.getElementById('canvas');
+                                  var context = canvas.getContext('2d');
+                                //   var video = document.getElementById('video');
+                                //   context.drawImage(video, 0, 0, 640, 480);
+                                  var photo = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+                                  photo = dataURItoBlob(photo)
+                                  var formData = new FormData()
+                                  
+                                  formData.append('img', photo)
+
+                                  $.ajax({
+                                     type: "POST", 
+                                     url: "{{url_for('get_image')}}", 
+                                     data: formData,
+                                     processData: false,
+                                    contentType: false,
+                                  }).done(function(msg){ 
+                                     alert(msg); 
+                                  });
+                                });
+                                                            
+                              });   
+    </script>
+
+    <script>
+        // function upload() {
+        //     var canvas = document.getElementById('canvas');
+        //     var context = canvas.getContext('2d');
+        //     var photo = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+        //     photo = dataURItoBlob(photo)
+        //     // var photo = document.getElementById('image').src;
+        //     var form = document.getElementById('loginForm');
+        
+        //     var formData = new FormData(form);
+        //     formData.append("file", photo);
+        //     var xmlhttp = new XMLHttpRequest();
+        //     xmlhttp.onreadystatechange = function(){
+        //         if(this.readyState == 4 && this.status == 200) {
+        //             document.getElementById('content').innerHTML = this.responseText;
+        //             // ShowCam();
+        //         } else {
+        //         document.getElementById('content').innerHTML = "ERROR";
+        //         }
+        //     } 
+        //     xmlhttp.open("POST", "/", false);
+        //     xmlhttp.send(formData);    
+        // }
+        function dataURItoBlob(dataURI) {
+            // convert base64/URLEncoded data component to raw binary data held in a string
+            var byteString;
+            if (dataURI.split(',')[0].indexOf('base64') >= 0)
+                byteString = atob(dataURI.split(',')[1]);
+            else
+                byteString = unescape(dataURI.split(',')[1]);
+            // separate out the mime component
+            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            // write the bytes of the string to a typed array
+            var ia = new Uint8Array(byteString.length);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ia], {type:mimeString});
+        }
+    </script>
+
+    
     <h3 style="text-align: center;">Welcome to AR Face Recognition</h3>
     <div class="container">
         <div class="row">
             <!-- <div class="col-lg-8  offset-lg-2" > -->
-            <img src="{{ url_for('video_feed') }}" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">
+            <!-- <img src="{{ url_for('video_feed') }}" style="display: block; margin-left: auto; margin-right: auto; width: 50%;"> -->
             <!-- </div> -->
         </div>
         <hr>
         <div class="row">
-            <form>
+            <!-- <form>
                 <a href="{{ url_for('background_process_test') }}';" id=test>
                     <button type="button" class="btn btn-info btn-lg" style="display: block; margin-left: auto; margin-right: auto; width: 50%;">Show last person Information</button>
                 </a>
-            </form>
+            </form> -->
         </div>
         <hr>
         <div class="row">

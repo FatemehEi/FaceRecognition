@@ -7,8 +7,9 @@ import tkinter as tk
 import pandas as pd
 import pandastable
 from pandastable import Table, TableModel
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request
 import pandas as pd
+from PIL import Image
 
 data = pd.read_excel("g.xlsx")
 
@@ -133,6 +134,18 @@ def background_process_test():
     # print("type ", information)
     return information
 
+@app.route('/get_image', methods=['GET','POST'])
+def get_image():
+    if request.method == "POST":
+        myfile=request.files['img']
+        image = Image.open(myfile)
+        image.save('photo.png')
+        print("gereftam")
+        # font = cv2.FONT_HERSHEY_DUPLEX
+        # cv2.putText(image, "press 'q' to exit", (5, 30), font, 0.65, (83,42,38), 2)
+    # return render_template('index.html', image_to_show=image)
+    return ""
+
 
 if __name__=='__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', ssl_context='adhoc')
